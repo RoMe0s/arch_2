@@ -2,8 +2,6 @@
 
 namespace Core\Domain\Entity;
 
-use Core\Domain\Exception\ShapeIdHasBeenAlreadySetException;
-
 final class Change
 {
     private $shapeId;

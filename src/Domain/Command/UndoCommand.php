@@ -3,7 +3,7 @@
 namespace Core\Domain\Command;
 
 use Core\Domain\UndoCommandStrategy\Context as StrategyContext;
-use Core\Domain\Factory\ActionFactory;
+use Core\Domain\Factory\ActionFactoryInterface;
 use Core\Domain\Repository\ActionRepositoryInterface;
 use Core\Domain\Entity\Action;
 use Core\Domain\Exception\ActionIsRequiredException;
@@ -20,7 +20,7 @@ final class UndoCommand implements CommandInterface, CommandWithActionInterface
 
     public function __construct(
         StrategyContext $strategyContext,
-        ActionFactory $actionFactory,
+        ActionFactoryInterface $actionFactory,
         ActionRepositoryInterface $actionRepository
     ) {
         $this->strategyContext = $strategyContext;
@@ -41,7 +41,7 @@ final class UndoCommand implements CommandInterface, CommandWithActionInterface
 
         $newChanges = [];
         foreach ($this->action->getChanges() as $change) {
-            $newShapeId = $this->strategyContext->executeStrategy($change);
+            $newShapeId = $this->strategyContext->handleShapeAndGetId($change);
             $newChange = $change->createReflected($newShapeId);
             $newChanges[] = $newChange;
         }

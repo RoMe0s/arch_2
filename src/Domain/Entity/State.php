@@ -19,7 +19,7 @@ final class State
         return $this->type;
     }
 
-    public function getColor(): Color
+    public function getColor(): ShapeColor
     {
         return $this->color;
     }

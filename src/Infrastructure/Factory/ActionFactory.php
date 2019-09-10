@@ -1,18 +1,20 @@
 <?php
 
-namespace Core\Domain\Factory;
+namespace Core\Infrastructure\Factory;
 
 use Core\Domain\Entity\{
     Action,
     Change,
     State
 };
+use Core\Domain\Factory\ActionFactoryInterface;
+use Illuminate\Support\Str;
 
-final class ActionFactory extends BaseFactory
+class ActionFactory implements ActionFactoryInterface
 {
     public function createFromChanges(array $changes): Action
     {
-        return Action::recordAction($this->generateId(), $changes);
+        return Action::recordAction(Str::uuid(), $changes);
     }
 
     public function createFromShapes(array $shapes): Action
@@ -22,6 +24,6 @@ final class ActionFactory extends BaseFactory
             $state = new State($shape->getType(), $shape->getColor());
             $changes[] = Change::create($shape->getId(), $state);
         }
-        return Action::recordAction($this->generateId(), $changes);
+        return Action::recordAction(Str::uuid(), $changes);
     }
 }

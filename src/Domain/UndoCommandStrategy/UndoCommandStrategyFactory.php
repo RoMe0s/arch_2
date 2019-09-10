@@ -3,6 +3,7 @@
 namespace Core\Domain\UndoCommandStrategy;
 
 use Core\Domain\Entity\Change;
+use Core\Domain\Exception\UndoCommandStrategyNotFoundException;
 
 abstract class UndoCommandStrategyFactory
 {
@@ -25,6 +26,6 @@ abstract class UndoCommandStrategyFactory
                 return $this->$creationMethod();
             }
         }
-        return null;
+        throw new UndoCommandStrategyNotFoundException();
     }
 }

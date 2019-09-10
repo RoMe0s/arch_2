@@ -13,5 +13,4 @@ class NoShapesException extends DomainException
     {
         return 'Shapes don\'t exists!';
     }
-
 }

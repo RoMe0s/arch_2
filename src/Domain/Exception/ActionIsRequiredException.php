@@ -11,7 +11,6 @@ class ActionIsRequiredException extends DomainException
 
     public function getUserFriendlyMessage(): string
     {
-        return 'An error occured! Please try again later!';
+        return 'An error occurred! Please try again later!';
     }
-
 }

@@ -3,8 +3,8 @@
 namespace Core\Domain\Command;
 
 use Core\Domain\Factory\{
-    ShapeFactory,
-    ActionFactory
+    ShapeFactoryInterface,
+    ActionFactoryInterface
 };
 use Core\Domain\Repository\{
     ShapeRepositoryInterface,
@@ -24,8 +24,8 @@ final class GenerateShapesCommand implements CommandInterface
     private $actionRepository;
 
     public function __construct(
-        ShapeFactory $shapeFactory,
-        ActionFactory $actionFactory,
+        ShapeFactoryInterface $shapeFactory,
+        ActionFactoryInterface $actionFactory,
         ShapeRepositoryInterface $shapeRepository,
         ActionRepositoryInterface $actionRepository
     ) {
@@ -37,10 +37,10 @@ final class GenerateShapesCommand implements CommandInterface
 
     public function execute(): void
     {
-        $shapesNumber = rand(1, self::MAX_SHAPES_NUMBER);
-
         $iterator = 0;
         $newShapes = [];
+        $shapesNumber = rand(1, self::MAX_SHAPES_NUMBER);
+
         while ($iterator++ < $shapesNumber) {
             $newShape = $this->shapeFactory->generate();
             $this->shapeRepository->save($newShape);

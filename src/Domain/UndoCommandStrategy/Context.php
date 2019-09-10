@@ -3,7 +3,6 @@
 namespace Core\Domain\UndoCommandStrategy;
 
 use Core\Domain\Exception\UndoCommandStrategyNotFoundException;
-use Core\Domain\UndoCommandStrategy\UndoCommandStrategyFactory;
 use Core\Domain\Entity\Change;
 
 final class Context
@@ -15,12 +14,9 @@ final class Context
         $this->undoCommandStrategyFactory = $undoCommandStrategyFactory;
     }
 
-    public function executeStrategy(Change $change): ?string
+    public function handleShapeAndGetId(Change $change): ?string
     {
         $strategy = $this->undoCommandStrategyFactory->make($change);
-        if ($strategy) {
-            return $strategy->execute($change);
-        }
-        throw new UndoCommandStrategyNotFoundException();
+        return $strategy->execute($change);
     }
 }

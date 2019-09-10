@@ -2,6 +2,8 @@
 
 namespace Core\Domain\Exception;
 
+use Core\Domain\Entity\Action;
+
 class ActionIsFullOfChangesException extends DomainException
 {
     public function __construct(Action $action)
@@ -11,7 +13,6 @@ class ActionIsFullOfChangesException extends DomainException
 
     public function getUserFriendlyMessage(): string
     {
-        return 'An error occured! Please try again later!';
+        return 'An error occurred! Please try again later!';
     }
-
 }

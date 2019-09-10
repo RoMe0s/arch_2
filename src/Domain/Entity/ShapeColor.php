@@ -2,6 +2,8 @@
 
 namespace Core\Domain\Entity;
 
+use Core\Domain\Exception\WrongShapeColorException;
+
 final class ShapeColor
 {
     private const AVAILABLE_COLORS = [

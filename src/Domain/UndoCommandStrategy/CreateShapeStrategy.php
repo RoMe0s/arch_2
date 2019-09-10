@@ -2,12 +2,9 @@
 
 namespace Core\Domain\UndoCommandStrategy;
 
-use Core\Domain\Factory\ShapeFactory;
+use Core\Domain\Factory\ShapeFactoryInterface;
 use Core\Domain\Repository\ShapeRepositoryInterface;
-use Core\Domain\Entity\{
-    Change,
-    Shape
-};
+use Core\Domain\Entity\Change;
 
 final class CreateShapeStrategy implements UndoCommandStrategyInterface
 {
@@ -16,7 +13,7 @@ final class CreateShapeStrategy implements UndoCommandStrategyInterface
     private $shapeRepository;
 
     public function __construct(
-        ShapeFactory $shapeFactory,
+        ShapeFactoryInterface $shapeFactory,
         ShapeRepositoryInterface $shapeRepository
     ) {
         $this->shapeFactory = $shapeFactory;
