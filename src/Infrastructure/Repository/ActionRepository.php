@@ -2,8 +2,6 @@
 
 namespace Core\Infrastructure\Repository;
 
-use Core\Domain\Entity\Action;
-use Core\Domain\Entity\Change;
 use Core\Domain\Repository\ActionRepositoryInterface;
 use Core\Infrastructure\Mapper\ActionMapper;
 use Core\Infrastructure\Persistence\Action as EloquentAction;
@@ -42,7 +40,6 @@ class ActionRepository implements ActionRepositoryInterface
     {
         $eloquentAction = EloquentAction::create(['id' => $action->getId()]);
 
-        /** @var Change $change */
         foreach ($action->getChanges() as $change) {
             $eloquentChange = $eloquentAction->changes()
                 ->create([
