@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Api\Controller;
+use App\Http\Controllers\Controller;
+use App\Service\{
+    UndoCommandFacade,
+    CommandHandler
+};
 use Core\Domain\Command\{
     GenerateShapesCommand,
-    ChangeColorCommand,
-    UndoCommand
+    ChangeColorCommand
 };
 use Core\Infrastructure\Persistence\Action as EloquentAction;
-use Core\Infrastructure\Service\CommandHandler;
-use App\Http\Request\Api\UndoCommandsRequest;
 use Core\Infrastructure\Service\UndoCommandsService;
+use App\Http\Requests\Api\UndoCommandsRequest;
 
 class CommandController extends Controller
 {
@@ -27,11 +29,9 @@ class CommandController extends Controller
         return response()->json();
     }
 
-    public function undoAction(EloquentAction $eloquentAction, UndoCommand $command)
+    public function undoAction(EloquentAction $eloquentAction, UndoCommandFacade $undoCommandFacade)
     {
-        //TODO: make facade
-        $command->setAction($action);
-        CommandHandler::handle($command);
+        $undoCommandFacade->undoCommand($eloquentAction);
         return response()->json();
     }
 

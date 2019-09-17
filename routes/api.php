@@ -18,4 +18,8 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('{eloquentAction}/undo-action', 'CommandController@undoAction');
         Route::post('undo', 'CommandController@undoByLimit');
     });
+
+    Route::get('shapes', 'ShapeController@index');
+
+    Route::get('actions', 'ShapeController@index');
 });

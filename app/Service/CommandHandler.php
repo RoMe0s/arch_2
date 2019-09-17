@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Infrastructure\Service;
+namespace App\Service;
 
 use Core\Domain\Command\CommandInterface;
 use Illuminate\Support\Facades\DB;
