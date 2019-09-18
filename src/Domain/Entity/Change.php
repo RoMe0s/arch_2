@@ -20,7 +20,7 @@ final class Change
         $this->previousState = $previousState;
     }
 
-    public function create(string $shapeId, State $state): Change
+    public static function create(string $shapeId, State $state): Change
     {
         return new self($shapeId, $state);
     }

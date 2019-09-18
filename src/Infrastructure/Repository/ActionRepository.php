@@ -5,6 +5,7 @@ namespace Core\Infrastructure\Repository;
 use Core\Domain\Repository\ActionRepositoryInterface;
 use Core\Infrastructure\Mapper\ActionMapper;
 use Core\Infrastructure\Persistence\Action as EloquentAction;
+use Core\Domain\Entity\Action;
 use Illuminate\Support\Str;
 
 class ActionRepository implements ActionRepositoryInterface

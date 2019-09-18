@@ -15,7 +15,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix' => 'command'], function () {
         Route::post('generate-shapes', 'CommandController@generateShapes');
         Route::post('change-color', 'CommandController@changeColor');
-        Route::post('{eloquentAction}/undo-action', 'CommandController@undoAction');
+        Route::post('{eloquentAction}/undo', 'CommandController@undoAction');
         Route::post('undo', 'CommandController@undoByLimit');
     });
 

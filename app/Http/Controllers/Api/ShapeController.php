@@ -10,8 +10,8 @@ class ShapeController extends Controller
 {
     public function index(ShapeService $shapeService)
     {
-        $shapes = $shapeService->get();
+        $shapes = collect($shapeService->get());
 
-        return ShapeResource::collection($shapes);
+        return ShapeResource::collection($shapes)->resolve();
     }
 }

@@ -13,6 +13,7 @@ class ActionResource extends JsonResource
         $action = $this->resource;
 
         return [
+            'id' => $action->getId(),
             'changes' => ChangeResource::collection($action->getChanges())
         ];
     }

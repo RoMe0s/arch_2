@@ -11,6 +11,7 @@ class Change extends Model
     protected $fillable = [
         'id',
         'shape_id',
+        'action_id',
         'state_id',
         'previous_state_id'
     ];
