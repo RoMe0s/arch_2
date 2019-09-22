@@ -8,9 +8,9 @@ interface ShapeRepositoryInterface
 {
     public function all(): array;
 
-    public function findByRand(): ?Shape;
-
     public function findById(string $id): ?Shape;
+
+    public function findByRand(): ?Shape;
 
     public function save(Shape $shape): void;
 

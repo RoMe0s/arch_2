@@ -9,7 +9,7 @@ class Shape extends Model
     protected $fillable = [
         'id',
         'type',
-        'color'
+        'color',
     ];
 
     public function getIncrementing()

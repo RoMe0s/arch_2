@@ -12,18 +12,9 @@ class ChangeResource extends JsonResource
         /** @var Change $change */
         $change = $this->resource;
 
-        if ($state = $change->getState()) {
-            $state = StateResource::make($state);
-        } else {
-            $state = null;
-        }
-
-        if ($previousState = $change->getPreviousState()) {
-            $previousState = StateResource::make($previousState);
-        } else {
-            $previousState = null;
-        }
-
-        return compact('state', 'previousState');
+        return [
+            'type' => $change->getType()->getValue(),
+            'color' => $change->getColor()->getValue()
+        ];
     }
 }

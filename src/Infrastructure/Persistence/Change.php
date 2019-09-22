@@ -12,8 +12,8 @@ class Change extends Model
         'id',
         'shape_id',
         'action_id',
-        'state_id',
-        'previous_state_id'
+        'type',
+        'color',
     ];
 
     public function getIncrementing()
@@ -26,13 +26,8 @@ class Change extends Model
         return 'string';
     }
 
-    public function state()
+    public function action()
     {
-        return $this->hasOne(State::class, 'state_id');
-    }
-
-    public function previousState()
-    {
-        return $this->hasOne(State::class, 'previous_state_id');
+        return $this->belongsTo(Action::class);
     }
 }

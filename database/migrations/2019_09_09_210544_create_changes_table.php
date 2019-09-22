@@ -14,31 +14,18 @@ class CreateChangesTable extends Migration
     public function up()
     {
         Schema::create('changes', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
 
             $table->uuid('action_id');
             $table->foreign('action_id')
-                ->references('actions')
-                ->on('id')
+                ->references('id')
+                ->on('actions')
                 ->onDelete('cascade');
 
-            $table->uuid('shape_id');
-            $table->foreign('shape_id')
-                ->references('shapes')
-                ->on('id')
-                ->onDelete('cascade');
+            $table->uuid('shape_id')->nullable();
 
-            $table->uuid('state_id')->nullable();
-            $table->foreign('state_id')
-                ->references('states')
-                ->on('id')
-                ->onDelete('cascade');
-
-            $table->uuid('previous_state_id')->nullable();
-            $table->foreign('previous_state_id')
-                ->references('states')
-                ->on('id')
-                ->onDelete('cascade');
+            $table->string('type');
+            $table->string('color');
 
             $table->unique(['action_id', 'shape_id']);
         });

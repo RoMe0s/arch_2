@@ -4,26 +4,23 @@ namespace Core\Infrastructure\Factory;
 
 use Core\Domain\Entity\{
     Action,
-    Change,
-    State
+    Change
 };
 use Core\Domain\Factory\ActionFactoryInterface;
 use Illuminate\Support\Str;
 
 class ActionFactory implements ActionFactoryInterface
 {
-    public function createFromChanges(array $changes): Action
-    {
-        return Action::recordAction(Str::uuid(), $changes);
-    }
-
-    public function createFromShapes(array $shapes): Action
+    public function createFromShapes(string $type, array $shapes): Action
     {
         $changes = [];
         foreach ($shapes as $shape) {
-            $state = new State($shape->getType(), $shape->getColor());
-            $changes[] = Change::create($shape->getId(), $state);
+            $changes[] = Change::create(
+                $shape->getId(),
+                $shape->getType(),
+                $shape->getColor()
+            );
         }
-        return Action::recordAction(Str::uuid(), $changes);
+        return Action::createNewAction(Str::uuid(), $type, $changes);
     }
 }

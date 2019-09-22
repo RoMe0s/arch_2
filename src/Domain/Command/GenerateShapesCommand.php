@@ -2,51 +2,33 @@
 
 namespace Core\Domain\Command;
 
-use Core\Domain\Factory\{
-    ShapeFactoryInterface,
-    ActionFactoryInterface
-};
-use Core\Domain\Repository\{
-    ShapeRepositoryInterface,
-    ActionRepositoryInterface
+use Core\Domain\Entity\Action;
+use Core\Domain\Service\{
+    GenerateShapesCommandHandler,
+    RollbackGenerateShapesCommandHandler
 };
 
 final class GenerateShapesCommand implements CommandInterface
 {
-    private const MAX_SHAPES_NUMBER = 5;
+    private $generateShapesCommandHandler;
 
-    private $shapeFactory;
-
-    private $actionFactory;
-
-    private $shapeRepository;
-
-    private $actionRepository;
+    private $rollbackGenerateShapesCommandHandler;
 
     public function __construct(
-        ShapeFactoryInterface $shapeFactory,
-        ActionFactoryInterface $actionFactory,
-        ShapeRepositoryInterface $shapeRepository,
-        ActionRepositoryInterface $actionRepository
+        GenerateShapesCommandHandler $generateShapesCommandHandler,
+        RollbackGenerateShapesCommandHandler $rollbackGenerateShapesCommandHandler
     ) {
-        $this->shapeFactory = $shapeFactory;
-        $this->actionFactory = $actionFactory;
-        $this->shapeRepository = $shapeRepository;
-        $this->actionRepository = $actionRepository;
+        $this->generateShapesCommandHandler = $generateShapesCommandHandler;
+        $this->rollbackGenerateShapesCommandHandler = $rollbackGenerateShapesCommandHandler;
     }
 
     public function execute(): void
     {
-        $iterator = 0;
-        $newShapes = [];
-        $shapesNumber = rand(1, self::MAX_SHAPES_NUMBER);
+        $this->generateShapesCommandHandler->handle();
+    }
 
-        while ($iterator++ < $shapesNumber) {
-            $newShape = $this->shapeFactory->generate();
-            $this->shapeRepository->save($newShape);
-            $newShapes[] = $newShape;
-        }
-        $newAction = $this->actionFactory->createFromShapes($newShapes);
-        $this->actionRepository->save($newAction);
+    public function rollback(Action $action): void
+    {
+        $this->rollbackGenerateShapesCommandHandler->handle($action);
     }
 }

@@ -1,14 +1,14 @@
 <template>
     <div>
-        <h2>Історія</h2>
+        <h2>Actions history</h2>
         <ol>
             <li v-for="action in actions">
-                {{ action }}
-                (<a href="#" @click.prevent="undoAction(action)">Відмінити</a>)
+                {{ action.type }}
+                (<a href="#" @click.prevent="rollbackAction(action)">Відмінити</a>)
             </li>
         </ol>
         <p v-if="!actions.length">
-            Пусто
+            Empty
         </p>
     </div>
 </template>
@@ -23,16 +23,16 @@
             };
         },
         methods: {
-            undoAction(action) {
-                calls.undoAction(action.id)
-                    .then(() => alert('Success!'))
-                    .catch(() => alert('Error!'));
+            rollbackAction(action) {
+                calls.rollbackActionCommand(action.id)
+                    .then(() => window.location.reload())
+                    .catch(this.handleException);
             }
         },
         created() {
             calls.getActions()
                 .then(response => this.actions = response.data)
-                .catch(() => alert('Error!'));
+                .catch(this.handleException);
         }
     }
 </script>

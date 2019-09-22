@@ -27,7 +27,11 @@ class ActionMapper
             $changes[] = $this->changeMapper->map($eloquentChange);
         }
 
-        $constructor->invokeArgs($action, [$eloquentAction->id, $changes]);
+        $constructor->invokeArgs($action, [
+            $eloquentAction->id,
+            $eloquentAction->type,
+            $changes,
+        ]);
 
         return $action;
     }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Згенеровані фігури</h2>
+        <h2>Generated shapes</h2>
         <ul>
             <li v-for="shape in shapes">
                 {{ shape.type }}
@@ -8,7 +8,7 @@
             </li>
         </ul>
         <p v-if="!shapes.length">
-            Пусто
+            Empty
         </p>
     </div>
 </template>
@@ -25,7 +25,7 @@
         created() {
             calls.getShapes()
                 .then(response => this.shapes = response.data)
-                .catch(() => alert('Error!'));
+                .catch(this.handleException);
         }
     }
 </script>

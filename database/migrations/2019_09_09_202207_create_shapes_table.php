@@ -14,7 +14,7 @@ class CreateShapesTable extends Migration
     public function up()
     {
         Schema::create('shapes', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->string('type');
             $table->string('color');
             $table->timestamps();

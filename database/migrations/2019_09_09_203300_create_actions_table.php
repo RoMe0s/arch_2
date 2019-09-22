@@ -14,7 +14,8 @@ class CreateActionsTable extends Migration
     public function up()
     {
         Schema::create('actions', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
+            $table->string('type');
             $table->timestamps();
         });
     }

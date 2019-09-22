@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Core\Domain\Service\RollbackCommandsServiceInterface;
 use App\Service\{
-    UndoCommandFacade,
+    RollbackCommandFacade,
     CommandHandler
 };
 use Core\Domain\Command\{
@@ -12,8 +13,7 @@ use Core\Domain\Command\{
     ChangeColorCommand
 };
 use Core\Infrastructure\Persistence\Action as EloquentAction;
-use Core\Infrastructure\Service\UndoCommandsService;
-use App\Http\Requests\Api\UndoCommandsRequest;
+use App\Http\Requests\Api\RollbackCommandsRequest;
 
 class CommandController extends Controller
 {
@@ -29,16 +29,16 @@ class CommandController extends Controller
         return response()->json();
     }
 
-    public function undoAction(EloquentAction $eloquentAction, UndoCommandFacade $undoCommandFacade)
+    public function rollbackAction(EloquentAction $eloquentAction, RollbackCommandFacade $service)
     {
-        $undoCommandFacade->undoCommand($eloquentAction);
+        $service->rollbackCommand($eloquentAction);
         return response()->json();
     }
 
-    public function undoByLimit(UndoCommandsRequest $request, UndoCommandsService $service)
+    public function rollbackByLimit(RollbackCommandsRequest $request, RollbackCommandsServiceInterface $service)
     {
         $limit = $request->get('limit');
-        $service->execute($limit);
+        $service->rollbackCommands($limit);
         return response()->json();
     }
 }

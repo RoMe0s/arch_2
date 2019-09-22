@@ -4,54 +4,39 @@ namespace Core\Domain\Entity;
 
 final class Change
 {
+    private $type;
+
+    private $color;
+
     private $shapeId;
 
-    private $state;
-
-    private $previousState;
-
     private function __construct(
-        string $shapeId = null,
-        State $state = null,
-        State $previousState = null
+        string $shapeId,
+        ShapeType $type,
+        ShapeColor $color
     ) {
+        $this->type = $type;
+        $this->color = $color;
         $this->shapeId = $shapeId;
-        $this->state = $state;
-        $this->previousState = $previousState;
     }
 
-    public static function create(string $shapeId, State $state): Change
+    public static function create(string $shapeId, ShapeType $type, ShapeColor $color): Change
     {
-        return new self($shapeId, $state);
+        return new self($shapeId, $type, $color);
     }
 
-    public function createReflected(?string $shapeId): Change
+    public function getType(): ShapeType
     {
-        return new self($shapeId, $this->previousState, $this->state);
+        return $this->type;
+    }
+
+    public function getColor(): ShapeColor
+    {
+        return $this->color;
     }
 
     public function getShapeId(): ?string
     {
         return $this->shapeId;
-    }
-
-    public function getState(): ?State
-    {
-        return $this->state;
-    }
-
-    public function getPreviousState(): ?State
-    {
-        return $this->previousState;
-    }
-
-    public function hasState(): bool
-    {
-        return (bool) $this->state;
-    }
-
-    public function hasPreviousState(): bool
-    {
-        return (bool) $this->previousState;
     }
 }

@@ -19,7 +19,8 @@ class ShapeRepository implements ShapeRepositoryInterface
     public function all(): array
     {
         $shapes = [];
-        foreach (EloquentShape::all() as $eloquentShape) {
+        $eloquentShapes = EloquentShape::latest()->get();
+        foreach ($eloquentShapes as $eloquentShape) {
             $shapes[] = $this->shapeMapper->map($eloquentShape);
         }
         return $shapes;

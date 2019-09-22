@@ -5,7 +5,11 @@ namespace Core\Infrastructure\Repository;
 use Core\Domain\Repository\ActionRepositoryInterface;
 use Core\Infrastructure\Mapper\ActionMapper;
 use Core\Infrastructure\Persistence\Action as EloquentAction;
-use Core\Domain\Entity\Action;
+use Core\Domain\Entity\{
+    Change,
+    Action
+};
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class ActionRepository implements ActionRepositoryInterface
@@ -20,7 +24,7 @@ class ActionRepository implements ActionRepositoryInterface
     public function all(): array
     {
         $actions = [];
-        $eloquentActions = EloquentAction::all();
+        $eloquentActions = EloquentAction::latest()->get();
         foreach ($eloquentActions as $eloquentAction) {
             $actions[] = $this->actionMapper->map($eloquentAction);
         }
@@ -37,34 +41,102 @@ class ActionRepository implements ActionRepositoryInterface
         return $actions;
     }
 
+    public function findFirstByType(Action $action): ?Action
+    {
+        $shapeIds = array_map(function (Change $change) {
+            return $change->getShapeId();
+        }, $action->getChanges());
+        $eloquentFirstAction = EloquentAction::with('changes')
+            ->whereHas('changes', function (Builder $builder) use ($shapeIds) {
+                $builder->whereIn('shape_id', $shapeIds);
+            })
+            ->where('type', $action->getType())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($eloquentFirstAction) {
+            return $this->actionMapper->map($eloquentFirstAction);
+        }
+        return null;
+    }
+
+    public function findPreviousByType(Action $action): ?Action
+    {
+        $shapeIds = array_map(function (Change $change) {
+            return $change->getShapeId();
+        }, $action->getChanges());
+        $eloquentAction = EloquentAction::find($action->getId());
+        $eloquentPreviousAction = EloquentAction::with('changes')
+            ->whereHas('changes', function (Builder $builder) use ($shapeIds) {
+                $builder->whereIn('shape_id', $shapeIds);
+            })
+            ->where('created_at', '<', $eloquentAction->created_at)
+            ->where('type', $action->getType())
+            ->first();
+
+        if ($eloquentPreviousAction) {
+            return $this->actionMapper->map($eloquentPreviousAction);
+        }
+        return null;
+    }
+
+    public function findPrevious(Action $action): ?Action
+    {
+        $shapeIds = array_map(function (Change $change) {
+            return $change->getShapeId();
+        }, $action->getChanges());
+        $eloquentAction = EloquentAction::find($action->getId());
+        $eloquentPreviousAction = EloquentAction::with('changes')
+            ->whereHas('changes', function (Builder $builder) use ($shapeIds) {
+                $builder->whereIn('shape_id', $shapeIds);
+            })
+            ->where('created_at', '<', $eloquentAction->created_at)
+            ->first();
+
+        if ($eloquentPreviousAction) {
+            return $this->actionMapper->map($eloquentPreviousAction);
+        }
+        return null;
+    }
+
+    public function getAllRelated(Action $action): array
+    {
+        $shapeIds = array_map(function (Change $change) {
+            return $change->getShapeId();
+        }, $action->getChanges());
+        $relatedEloquentActions = EloquentAction::where('id', '!=', $action->getId())
+            ->whereHas('changes', function (Builder $builder) use ($shapeIds) {
+                $builder->whereIn('shape_id', $shapeIds);
+            })
+            ->get();
+
+        $relatedActions = [];
+        foreach ($relatedEloquentActions as $relatedEloquentAction) {
+            $relatedActions[] = $this->actionMapper->map($relatedEloquentAction);
+        }
+        return $relatedActions;
+    }
+
     public function save(Action $action): void
     {
-        $eloquentAction = EloquentAction::create(['id' => $action->getId()]);
+        $eloquentAction = EloquentAction::updateOrCreate(
+            ['id' => $action->getId()],
+            ['type' => $action->getType()]
+        );
 
         foreach ($action->getChanges() as $change) {
-            $eloquentChange = $eloquentAction->changes()
-                ->create([
-                    'id' => Str::uuid(),
-                    'shape_id' => $change->getShapeId()
-                ]);
-
-            if ($change->hasState()) {
-                $state = $change->getState();
-                $eloquentChange->state()->create([
-                    'id' => Str::uuid(),
-                    'type' => $state->getType(),
-                    'color' => $state->getColor()
-                ]);
-            }
-
-            if ($change->hasPreviousState()) {
-                $previousState = $change->getPreviousState();
-                $eloquentChange->previousState()->create([
-                    'id' => Str::uuid(),
-                    'type' => $previousState->getType(),
-                    'color' => $previousState->getColor()
-                ]);
-            }
+            $eloquentAction->changes()->updateOrCreate([
+                'id' => Str::uuid(),
+                'shape_id' => $change->getShapeId(),
+            ], [
+                'type' => $change->getType()->getValue(),
+                'color' => $change->getColor()->getValue(),
+            ]);
         }
+    }
+
+    public function delete(Action $action): void
+    {
+        EloquentAction::where('id', $action->getId())->delete();
     }
 }

@@ -2,42 +2,33 @@
 
 namespace Core\Domain\Command;
 
-use Core\Domain\Exception\NoShapesException;
-use Core\Domain\Repository\{
-    ShapeRepositoryInterface,
-    ActionRepositoryInterface
+use Core\Domain\Service\{
+    ChangeColorCommandHandler,
+    RollbackChangeColorCommandHandler
 };
-use Core\Domain\Factory\ActionFactoryInterface;
+use Core\Domain\Entity\Action;
 
 final class ChangeColorCommand implements CommandInterface
 {
-    private $shapeRepository;
+    private $changeColorCommandHandler;
 
-    private $actionFactory;
-
-    private $actionRepository;
+    private $rollbackChangeColorCommandHandler;
 
     public function __construct(
-        ShapeRepositoryInterface $shapeRepository,
-        ActionFactoryInterface $actionFactory,
-        ActionRepositoryInterface $actionRepository
+        ChangeColorCommandHandler $changeColorCommandHandler,
+        RollbackChangeColorCommandHandler $rollbackChangeColorCommandHandler
     ) {
-        $this->shapeRepository = $shapeRepository;
-        $this->actionFactory = $actionFactory;
-        $this->actionRepository = $actionRepository;
+        $this->changeColorCommandHandler = $changeColorCommandHandler;
+        $this->rollbackChangeColorCommandHandler = $rollbackChangeColorCommandHandler;
     }
 
     public function execute(): void
     {
-        $shape = $this->shapeRepository->findByRand();
-        if (!$shape) {
-            throw new NoShapesException();
-        }
-        
-        $shape->toggleColor();
-        $this->shapeRepository->save($shape);
+        $this->changeColorCommandHandler->handle();
+    }
 
-        $newAction = $this->actionFactory->generateFromShapes([$shape]);
-        $this->actionRepository->save($newAction);
+    public function rollback(Action $action): void
+    {
+        $this->rollbackChangeColorCommandHandler->handle($action);
     }
 }

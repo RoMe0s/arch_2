@@ -11,10 +11,12 @@ class ActionResource extends JsonResource
     {
         /** @var Action $action */
         $action = $this->resource;
+        $changes = collect($action->getChanges());
 
         return [
             'id' => $action->getId(),
-            'changes' => ChangeResource::collection($action->getChanges())
+            'type' => $action->getType(),
+            'changes' => ChangeResource::collection($changes)
         ];
     }
 }

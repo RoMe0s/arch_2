@@ -2,15 +2,16 @@
 
 namespace Core\Domain\Exception;
 
-class ActionIsRequiredException extends DomainException
+class CommandNotFoundException extends DomainException
 {
     public function __construct()
     {
-        parent::__construct('Action is required!');
+        parent::__construct('Command not found!');
     }
 
     public function getUserFriendlyMessage(): string
     {
         return 'An error occurred! Please try again later!';
     }
+
 }

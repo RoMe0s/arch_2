@@ -15,11 +15,11 @@ Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix' => 'command'], function () {
         Route::post('generate-shapes', 'CommandController@generateShapes');
         Route::post('change-color', 'CommandController@changeColor');
-        Route::post('{eloquentAction}/undo', 'CommandController@undoAction');
-        Route::post('undo', 'CommandController@undoByLimit');
+        Route::post('{eloquentAction}/rollback', 'CommandController@rollbackAction');
+        Route::post('rollback', 'CommandController@rollbackByLimit');
     });
 
     Route::get('shapes', 'ShapeController@index');
 
-    Route::get('actions', 'ShapeController@index');
+    Route::get('actions', 'ActionController@index');
 });

@@ -7,11 +7,16 @@ use Core\Infrastructure\Persistence\Change as EloquentChange;
 
 class ChangeMapper
 {
-    private $stateMapper;
+    private $shapeTypeMapper;
 
-    public function __construct(StateMapper $stateMapper)
-    {
-        $this->stateMapper = $stateMapper;
+    private $shapeColorMapper;
+
+    public function __construct(
+        ShapeTypeMapper $shapeTypeMapper,
+        ShapeColorMapper $shapeColorMapper
+    ) {
+        $this->shapeTypeMapper = $shapeTypeMapper;
+        $this->shapeColorMapper = $shapeColorMapper;
     }
 
     public function map(EloquentChange $eloquentChange): Change
@@ -22,14 +27,13 @@ class ChangeMapper
 
         $change = $class->newInstanceWithoutConstructor();
 
-        if ($previousState = $eloquentChange->previousState) {
-            $previousState = $this->stateMapper->map($previousState);
-        }
+        $type = $this->shapeTypeMapper->map($eloquentChange->type);
+        $color = $this->shapeColorMapper->map($eloquentChange->color);
 
         $constructor->invokeArgs($change, [
-            $eloquentChange->id,
-            $this->stateMapper->map($eloquentChange->state),
-            $previousState
+            $eloquentChange->shape_id,
+            $type,
+            $color,
         ]);
 
         return $change;

@@ -2,15 +2,9 @@
 
 namespace Core\Domain\Factory;
 
-use Core\Domain\Entity\{
-    ShapeType,
-    ShapeColor,
-    Shape
-};
+use Core\Domain\Entity\Shape;
 
 interface ShapeFactoryInterface
 {
     public function generate(): Shape;
-
-    public function create(ShapeType $type, ShapeColor $color): Shape;
 }

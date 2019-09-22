@@ -21,6 +21,19 @@ window.Vue = require('vue');
 
 Vue.component('main-component', require('./components/main-component.vue').default);
 
+Vue.mixin({
+    methods: {
+        handleException(error) {
+            const responseData = error.response.data;
+            toastr.error(responseData.message);
+
+            if ('errors' in responseData) {
+                _.each(_.flatten(_.values(responseData.errors)), toastr.error);
+            }
+        }
+    }
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

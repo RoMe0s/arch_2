@@ -2,14 +2,30 @@
 
 namespace App\Providers;
 
-use Core\Domain\Factory\ActionFactoryInterface;
-use Core\Domain\Factory\ShapeFactoryInterface;
-use Core\Domain\Repository\ActionRepositoryInterface;
-use Core\Domain\Repository\ShapeRepositoryInterface;
-use Core\Infrastructure\Factory\ActionFactory;
-use Core\Infrastructure\Factory\ShapeFactory;
-use Core\Infrastructure\Repository\ActionRepository;
-use Core\Infrastructure\Repository\ShapeRepository;
+use Core\Domain\Factory\{
+    ActionFactoryInterface,
+    ShapeFactoryInterface
+};
+use Core\Domain\Repository\{
+    ActionRepositoryInterface,
+    ShapeRepositoryInterface
+};
+use Core\Domain\Service\{
+    BaseCommandFactory,
+    RollbackCommandsServiceInterface
+};
+use Core\Infrastructure\Factory\{
+    ActionFactory,
+    ShapeFactory
+};
+use Core\Infrastructure\Repository\{
+    ActionRepository,
+    ShapeRepository
+};
+use Core\Infrastructure\Service\{
+    CommandFactory,
+    RollbackCommandsService
+};
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -49,6 +65,16 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ActionFactoryInterface::class,
             ActionFactory::class
+        );
+
+        $this->app->bind(
+            BaseCommandFactory::class,
+            CommandFactory::class
+        );
+
+        $this->app->bind(
+            RollbackCommandsServiceInterface::class,
+            RollbackCommandsService::class
         );
     }
 }

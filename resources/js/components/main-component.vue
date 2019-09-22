@@ -6,7 +6,7 @@
         <hr>
         <history-component></history-component>
         <hr>
-        <undo-component></undo-component>
+        <rollback-component></rollback-component>
     </div>
 </template>
 
@@ -14,14 +14,14 @@
     import ActionsComponent from './actions-component';
     import ShapesComponent from './shapes-component';
     import HistoryComponent from './history-component';
-    import UndoComponent from './undo-component';
+    import RollbackComponent from './rollback-component';
 
     export default {
         components: {
             ActionsComponent,
             ShapesComponent,
             HistoryComponent,
-            UndoComponent
+            RollbackComponent
         }
     }
 </script>
